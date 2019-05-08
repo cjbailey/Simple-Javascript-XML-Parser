@@ -1,5 +1,34 @@
 body {
-  font-family: sans-serif;
-  background-color: #282828;
-  color: #eee;
+	font-family: sans-serif;
+	background-color: #282828;
+	color: #eee;
+}
+
+h1,
+h2 {
+	color: #83fa63;
+}
+
+h3 {
+	color: #6dc554;
+}
+
+sub {
+	color: #fcff35;
+}
+
+a {
+	color: #ff3589;
+}
+
+#app {
+	max-width: 650px;
+	margin: 0 auto;
+}
+
+.dialog {
+	background: #2c3547;
+	padding: 20px;
+	border-radius: 10px;
+	margin-bottom: 20px;
 }
