@@ -1,3 +1,5 @@
+import XmlTextContent from "./XmlTextContent";
+
 function XmlElement(tagName, ...attributes) {
   this._tagName = tagName;
   this._attributes = attributes;
@@ -14,7 +16,7 @@ XmlElement.prototype = {
   },
 
   append(childElement) {
-    if (childElement instanceof XmlElement) {
+    if (childElement instanceof XmlElement || childElement instanceof XmlTextContent) {
       this._children.push(childElement);
     }
   },
