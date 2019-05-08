@@ -25,4 +25,8 @@ it("<!DOCTYPE html> is invalid XML", () => {
 
 it("<?xml ... ?> attributes are included in XmlDocument attributes", () => {
   let xml = '<?xml version="1.0" encoding="UTF-8"?><root></root>';
+  let xmlDoc = new XmlDocument(xml);
+
+  expect(xmlDoc.attributes.filter(x => x.name === "version" && x.value === "1.0").length === 1).toBe(true);
+  expect(xmlDoc.attributes.filter(x => x.name === "encoding" && x.value === "UTF-8").length === 1).toBe(true);
 });
