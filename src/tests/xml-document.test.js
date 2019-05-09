@@ -38,3 +38,10 @@ it("Self-terminating tags are parsed correctly", () => {
 
 	expect(xmlDoc.toString()).toBe(xmlOutput);
 });
+
+it("Recursive filtering returns correct elements", () => {
+	let xmlInput = "<root><foo abc='1234'><bar>hello</bar><bar>world</bar></foo></root>";
+	let xmlDoc = new XmlDocument(xmlInput);
+	let result = xmlDoc.recursiveFilter(x => x.tagName && x.tagName === "bar");
+	expect(result[0].tagName).toBe("bar");
+});

@@ -21,6 +21,13 @@ a {
 	color: #ff3589;
 }
 
+code {
+	font-family: monospace;
+	background-color: rgba(54, 78, 94, 0.253);
+	display: block;
+	padding: 5px;
+}
+
 #app {
 	max-width: 650px;
 	margin: 0 auto;
