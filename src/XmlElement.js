@@ -54,5 +54,5 @@ function renderAttributes(attributes) {
 
 function renderChildren(children) {
 	if (!Array.isArray(children) || children.length === 0) return "";
-	return children.join();
+	return children.join("");
 }

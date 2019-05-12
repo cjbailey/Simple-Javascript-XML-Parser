@@ -5,9 +5,9 @@ import XmlTextContent from "./XmlTextContent";
 const beginTag = "<";
 const endTag = "</";
 const xmlHead = "?xml";
-const splitByNodeRegex = /(<)[^>]+>/g;
+const splitByNodeRegex = /<[^>]+>[^</]*/g;
 const parseTagNameRegex = /(<|<\/)([\w:?]+)/;
-const parseTagValueRegex = tagName => new RegExp(`(?=<${tagName}(?=\s|>)).+?(?=>)>(.*(?=<\/${tagName}>))`);
+const parseTagValueRegex = tagName => new RegExp(`(?=<${tagName}.+(?=\s|>)).+?(?=>)>(.*)`);
 const parseAttributesRegex = /\w+=("|').*?[^\\]\1/g;
 const parseAttributeNameRegex = /^\w+(?=\=)/g;
 const parseAttributeValueRegex = /("|').+\1/g;
@@ -26,7 +26,7 @@ function XmlDocument(xmlString) {
 
 XmlDocument.prototype = Object.assign(Object.create(XmlElement.prototype), {
 	toString() {
-		return this._children.length > 0 ? this._children[0].toString() : "";
+		return this._children.length > 0 ? (this._attributes.length > 0 ? `<?xml ${this._attributes.join(" ")}?>` : "") + this._children[0].toString() : "";
 	},
 
 	append(childElement) {
@@ -45,14 +45,15 @@ function parseXml(xmlString) {
 	let closedTag;
 	let docAttributes = [];
 
-	nodes.forEach(node => {
-		let tagName = node.match(parseTagNameRegex);
-		if (!tagName || tagName.length !== 3) throw new Error("Error while parsing XML string");
+	nodes.forEach((node, idx) => {
+		let tag = node.match(parseTagNameRegex);
+		if (!tag || tag.length !== 3) throw new Error("Error while parsing XML string");
 
-		if (tagName[1] === beginTag) {
-			processBeginTag(tagName, docAttributes, openTag);
-		} else if (tagName[1] === endTag) {
-			closedTag = processEndTag(xmlString, tagName, openTag, closedTag);
+		let tagType = tag[1];
+		if (tagType === beginTag) {
+			processBeginTag(node, tag[2], docAttributes, openTag);
+		} else if (tagType === endTag) {
+			closedTag = processEndTag(tag[2], openTag, closedTag);
 		}
 	});
 
@@ -62,8 +63,8 @@ function parseXml(xmlString) {
 	};
 }
 
-function processBeginTag(tagName, docAttributes, openTag) {
-	let attribStr = tagName.input.match(parseAttributesRegex);
+function processBeginTag(node, tagName, docAttributes, openTag) {
+	let attribStr = node.match(parseAttributesRegex);
 	let attribs = [];
 	if (attribStr) {
 		attribStr.forEach(attrAndValue => {
@@ -75,34 +76,32 @@ function processBeginTag(tagName, docAttributes, openTag) {
 		});
 	}
 
-	if (tagName[2].startsWith(xmlHead)) {
+	if (tagName.startsWith(xmlHead)) {
 		docAttributes.push(...attribs);
 	} else {
-		openTag.push(new XmlElement(tagName[2], ...attribs));
+		let el = new XmlElement(tagName, ...attribs);
+
+		// Check for inner text content
+		let tagValue = node.match(parseTagValueRegex(tagName));
+		if (tagValue && tagValue.length > 0) {
+			el.append(new XmlTextContent(tagValue[1]));
+		}
+
+		openTag.push(el);
 	}
 }
 
-function processEndTag(xmlString, tagName, openTag, closedTag) {
+function processEndTag(tagName, openTag, closedTag) {
 	do {
 		closedTag = openTag.pop();
 		if (!closedTag) {
-			console.debug("closedTag is undefined");
-			console.debug(openTag);
-		}
-
-		// Check for inner text content
-		let tagValue = xmlString.match(parseTagValueRegex(closedTag.tagName));
-		if (tagValue) {
-			let isTextContent = tagValue[1].match(splitByNodeRegex) === null;
-			if (isTextContent && tagValue[1].length > 0) {
-				closedTag.append(new XmlTextContent(tagValue[1]));
-			}
+			throw new Error("closedTag is undefined");
 		}
 
 		if (openTag.length > 0) {
 			openTag[openTag.length - 1].append(closedTag);
 		}
-	} while (closedTag.tagName !== tagName[2] && openTag.length > 0);
+	} while (closedTag.tagName !== tagName && openTag.length > 0);
 
 	return closedTag;
 }
