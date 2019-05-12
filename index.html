@@ -19,8 +19,9 @@
 		<div class="dialog">
 			<h2>How to use</h2>
 			<code>
-      let xml = "<root lang='en'><foo a='qwe'><foobar>hello world</foobar></foo></root>";<br/>
+      let xml = "&lt;root lang='en'&gt;&lt;foo a='qwe'&gt;&lt;foobar&gt;hello world&lt/foobar&gt;&lt;/foo&gt;&lt;/root&gt;";<br/>
       let xmlDoc = new XmlDocument(xml);<br/>
+      xmlDoc.toString();
       </code>
 			<h3>XmlElement</h3>
 			<code>xmlDoc.children ... <i>(An array of XmlElement objects)</i> ...<br/></code>
