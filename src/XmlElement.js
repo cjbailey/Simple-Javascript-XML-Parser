@@ -47,8 +47,8 @@ XmlElement.prototype = {
 			indent: 2
 		} );
 		let newLine = args && args.prettyPrint ? "\n" : "";
-		let indent = args.prettyPrint ? " ".repeat( args.indent * level ) : "";
-		return `${newLine}${indent}<${this._tagName}${renderAttributes(this._attributes)}>${renderChildren(this._children, args, level + 1)}${indent}</${this._tagName}>${newLine}`;
+		let indent = calcIndent( args, level );
+		return `${newLine}${indent}<${this._tagName}${renderAttributes(this._attributes)}>${renderChildren(this._children, args, level + 1)}</${this._tagName}>${newLine}`;
 	}
 };
 
@@ -65,5 +65,10 @@ function renderChildren( children, args, level ) {
 	children.forEach( child => {
 		result += child.toString( args, level );
 	} );
-	return result;
+
+	return `${result}${(result.slice(-1) === "\n") ? calcIndent( args, level - 1 ) : ""}`;
+}
+
+function calcIndent( args, level ) {
+	return args.prettyPrint ? " ".repeat( args.indent * level ) : "";
 }
