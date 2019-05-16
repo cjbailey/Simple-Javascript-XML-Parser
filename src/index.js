@@ -1,10 +1,17 @@
 import "./styles.css";
 import XmlDocument from "./XmlDocument";
-import XmlElement from "./XmlElement";
 
-let xml = "<?xml version='1.0' encoding='UTF-8'?><root><list><item id='1'>Hello world</item><item id='2'>Goodbye</item></list></root>";
-let xmlDoc = new XmlDocument( xml );
+const parseBtn = document.getElementById( "xml-parse-btn" );
+parseBtn.addEventListener( "click", () => {
+    let xmlContent = document.getElementById( "xml-import" ).value;
+    let xmlDoc = new XmlDocument( xmlContent );
+    let parsedResultElement = document.getElementById( "xml-parsed-result" );
+    let result = xmlDoc.toString( {
+        prettyPrint: true,
+        indent: 2,
+        newLine: "\n"
+    } );
+    parsedResultElement.value = result;
 
-console.log( xmlDoc.toString( {
-    prettyPrint: true
-} ) );
+    console.log( result );
+} );

@@ -54,7 +54,8 @@ it( "XML document is pretty printed if requested", () => {
   let expectedXml = "<?xml version='1.0' encoding='UTF-8'?>\n<root>\n  <list>\n    <item id='1'>Hello world</item>\n    <item id='2'>Goodbye</item>\n  </list>\n</root>";
 
   let resultXml = xmlDoc.toString( {
-    prettyPrint: true
+    prettyPrint: true,
+    newLine: "\n"
   } );
 
   console.log( resultXml );

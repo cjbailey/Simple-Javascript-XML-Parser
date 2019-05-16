@@ -46,6 +46,31 @@ textarea {
 	width: 100%;
 	max-width: 100%;
 	min-width: 100%;
-	min-height: 200px;
-	color: #eee;
+	min-height: 400px;
+    color: #eee;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+button {
+    -webkit-appearance: none;
+    background-color: rgb(69, 110, 138);
+    border: 2px solid rgb(34, 63, 83);
+    border-radius: 5px;
+    color: #eee;
+    padding: 10px;
+}
+
+button:hover {
+    background-color: rgb(110, 142, 163);
+}
+
+button:active {
+    background-color: #eee;
+    color: rgb(69, 110, 138);
+}
+
+h3 {
+    font-size: 8pt;
+    vertical-align: sub;
+    margin-bottom: 0;
 }
