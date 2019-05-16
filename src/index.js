@@ -12,6 +12,4 @@ parseBtn.addEventListener( "click", () => {
         newLine: "\n"
     } );
     parsedResultElement.value = result;
-
-    console.log( result );
 } );

@@ -5,12 +5,13 @@ import defaults from "./defaults";
 
 const beginTag = "<";
 const endTag = "</";
+const selfTerminatingTag = "/>";
 const xmlHead = "?xml";
-const splitByNodeRegex = /<[^>]+>[^</]*/g;
-const parseTagNameRegex = /(<|<\/)([\w:?-]+)/;
-const parseTagValueRegex = tagName => new RegExp( `(?=<${tagName}.+(?=\s|>)).+?(?=>)>(.*)` );
-const parseAttributesRegex = /\w+=("|').*?[^\\]\1/g;
-const parseAttributeNameRegex = /^\w+(?=\=)/g;
+const splitByNodeRegex = /<[^>]+>[^<]*/g;
+const parseTagNameRegex = /(<|<\/)([\w:?-]+)(.*)/;
+const parseTagValueRegex = tagName => new RegExp( `(?:(<${tagName}).*)(?:>)(.*)` );
+const parseAttributesRegex = /[\w:-]+=("|').*?[^\\]\1(?=.*>)/g;
+const parseAttributeNameRegex = /^[\w:-]+(?=\=)/g;
 const parseAttributeValueRegex = /("|').+\1/g;
 
 function XmlDocument( xmlString ) {
@@ -60,12 +61,16 @@ function parseXml( xmlString ) {
     let docAttributes = [];
 
     nodes.forEach( ( node, idx ) => {
-        let tag = node.match( parseTagNameRegex );
-        if ( !tag || tag.length !== 3 ) throw new Error( "Error while parsing XML string" );
+        let tag = parseTagNameRegex.exec( node );
+        if ( !tag || tag.length < 3 ) throw new Error( "Error while parsing XML string" );
 
         let tagType = tag[1];
         if ( tagType === beginTag ) {
             processBeginTag( node, tag[2], docAttributes, openTag );
+
+            if ( tag[3].match( `${selfTerminatingTag}+` ) ) {
+                closedTag = processEndTag( tag[2], openTag, closedTag );
+            }
         } else if ( tagType === endTag ) {
             closedTag = processEndTag( tag[2], openTag, closedTag );
         }
@@ -96,9 +101,9 @@ function processBeginTag( node, tagName, docAttributes, openTag ) {
         let el = new XmlElement( tagName, ...attribs );
 
         // Check for inner text content
-        let tagValue = node.match( parseTagValueRegex( tagName ) );
-        if ( tagValue && tagValue.length > 0 ) {
-            el.append( new XmlTextContent( tagValue[1] ) );
+        let tagValue = parseTagValueRegex( tagName ).exec( node );
+        if ( tagValue && tagValue.length > 2 && tagValue[2] !== "" ) {
+            el.append( new XmlTextContent( tagValue[2] ) );
         }
 
         openTag.push( el );

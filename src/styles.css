@@ -13,6 +13,13 @@ h3 {
 	color: #6dc554;
 }
 
+h4 {
+    font-size: 8pt;
+    vertical-align: sub;
+    margin-bottom: 0;
+    color: #6dc554;
+}
+
 sub {
 	color: #fcff35;
 }
@@ -69,8 +76,3 @@ button:active {
     color: rgb(69, 110, 138);
 }
 
-h3 {
-    font-size: 8pt;
-    vertical-align: sub;
-    margin-bottom: 0;
-}
