@@ -1,5 +1,5 @@
-import XmlDocument from "../XmlDocument";
-import XmlElement from "../XmlElement";
+import XmlDocument from "../src/XmlDocument";
+import XmlElement from "../src/XmlElement";
 
 it( "XmlDocument renders correctly", () => {
     let xml = "<?xml version='1.0' encoding='UTF-8'?><root><list><item id='1'>Hello world</item><item id='2'>Goodbye</item></list></root>";
