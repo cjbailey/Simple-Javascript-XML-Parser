@@ -51,7 +51,7 @@ it( "Recursive filtering returns correct elements", () => {
 it( "XML document is pretty printed if requested", () => {
   let xml = "<?xml version='1.0' encoding='UTF-8'?><root><list><item id='1'>Hello world</item><item id='2'>Goodbye</item></list></root>";
   let xmlDoc = new XmlDocument( xml );
-  let expectedXml = `<?xml version='1.0' encoding='UTF-8'?>\n<root>\n<list>\n<item id='1'>Hello world</item>\n<item id='2'>Goodbye</item>\n</list>\n</root>`;
+  let expectedXml = "<?xml version='1.0' encoding='UTF-8'?>\n<root>\n  <list>\n    <item id='1'>Hello world</item>\n    <item id='2'>Goodbye</item>\n  </list>\n</root>";
 
   let resultXml = xmlDoc.toString( {
     prettyPrint: true
