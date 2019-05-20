@@ -36,14 +36,15 @@ XmlElement.prototype = {
         }
     },
 
-    recursiveFilter( predicate ) {
+    recursiveFilter( predicate, currPath = "" ) {
         let filtered = [];
 
         if ( this._children.length > 0 ) {
             this._children.filter( child => {
                 if ( child instanceof XmlElement ) {
-                    if ( predicate( child ) === true ) filtered.push( child );
-                    filtered = filtered.concat( child.recursiveFilter( predicate ) );
+                    let nextPath = `${currPath.length > 0 ? currPath + "." : ""}${child.tagName}`;
+                    if ( predicate( child, nextPath ) === true ) filtered.push( child );
+                    filtered = filtered.concat( child.recursiveFilter( predicate, nextPath ) );
                 }
             } );
         }

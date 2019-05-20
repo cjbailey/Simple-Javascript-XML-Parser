@@ -83,3 +83,11 @@ it( "Self-terminating tags are parsed correctly", () => {
 
     expect( xmlDoc.toString() ).toBe( expectedXml );
 } );
+
+it( "Recursive filter provides current node path in predicate callback", () => {
+    let xmlInput = "<root><item id='1'><foo>value 1</foo></item><item id='2'><bar>value 2</bar></item></root>";
+    let xmlDoc = new XmlDocument( xmlInput );
+
+    let result = xmlDoc.recursiveFilter( ( x, path ) => path === "root.item.bar" );
+    expect( result[0].innerText ).toBe( "value 2" );
+} );
