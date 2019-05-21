@@ -36,6 +36,17 @@ XmlElement.prototype = {
         }
     },
 
+    appendMany( children ) {
+        if ( !Array.isArray( children ) )
+            return false;
+
+        let self = this;
+
+        children.forEach( child => {
+            self.append( child );
+        } );
+    },
+
     recursiveFilter( predicate, currPath = "" ) {
         let filtered = [];
 
